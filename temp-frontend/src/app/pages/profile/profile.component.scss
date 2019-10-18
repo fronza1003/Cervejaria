@@ -1,0 +1,65 @@
+.form-avatar {
+  float: left;
+  height: 120px;
+  width: 120px;
+  margin-right: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #fff;
+  overflow: hidden;
+
+  img {
+    height: 120px;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.content-box{
+  margin-left: 100px;
+  width: 350px;
+  padding: 0px;
+}
+
+.sensor-info {
+  color: gray;
+}
+
+.content-box-all {
+  width: 50%;
+  background: white;
+  margin-left: 43px;
+  border: 1px solid #d8d6d6;
+  border-radius: 35px;
+  position: fixed;
+}
+
+.input-content {
+  margin-left: 65%;
+  width: 230px;
+  background: white;
+  border: 1px solid #d8cccc;
+  border-radius: 30px;
+  padding: 0px;
+  height: 340px;
+  padding: 34px;
+}
+
+input {
+  margin-top: 20px;
+  border: 1px solid #e4dddd;
+  padding: 10px;
+  margin-left: -10px;
+}
+
+button {
+  border-radius: 10px;
+  margin-top: 20px;
+  background: none;
+  border: none;
+  width: 157px;
+  height: 50px;
+  border: 1px solid red;
+}
