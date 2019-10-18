@@ -12,16 +12,16 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
 void setup(void) 
-{ 
-  // iniciar porta serial 
+{
+  // Iniciar porta serial 
   Serial.begin(9600); 
   Serial.println("Demo de biblioteca para controle de temperatura Dallas em circuito integrado"); 
-  // iniciar a biblioteca 
+  // Iniciar a biblioteca 
   sensors.begin(); 
 }
 
 void loop(void) 
-{ 
+{
   sensors.requestTemperatures(); 
   Celcius=sensors.getTempCByIndex(0);
   Fahrenheit=sensors.toFahrenheit(Celcius);
@@ -30,4 +30,4 @@ void loop(void)
   Serial.print(" F  ");
   Serial.println(Fahrenheit);
   delay(1000); 
-} 
+}
