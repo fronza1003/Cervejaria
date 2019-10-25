@@ -18,59 +18,95 @@ float tempAtual = 0;
 float tempAlvo = 0;
 float tempAnterior = 0;
 float tempProjetada = 0;
-
-//razão do crescimento da temperatura para cálculo da temperatura projetada
-float razaoTemp 
-
+int anguloAtual = 0
+int minutos = 0;
 
 boolean iniciado = 0;
-int angulo = 5;
-float anguloInicial = 0;
-
 
 void setup(void) {
-
   servo.attach(8);
-  //servo.write(angle);
-  
+  servo.write(anguloAtual);  
   Serial.begin(9600); 
   sensors.begin();
+  iniciar();
 }
 
 void loop(void) {
   sensors.requestTemperatures();   
   tempAtual=sensors.getTempCByIndex(0);
-
-  servo.write(angulo);
+  tempProjetada = tempAlvo - 10;
 
   //TODO
   //Ler botão iniciar, pegar temperatura e tempo
 
-  if (iniciado = 1)  {
+  
 
-    sensors.requestTemperatures();
-    tempAtual=sensors.getTempCByIndex(0);
-    if (tempAtual < tempAlvo) {
-      //TODO
-      //aumentar temperatura com o movimento do servo
-    } else if (tempAtual > tempAlvo) {
-      //TODO
-      //diminuir a temperatura com o movimento do servo motor
-    } else {
-      //TODO
-      //manter a temperatura
-    }
-     
+  sensors.requestTemperatures();
+  tempAtual=sensors.getTempCByIndex(0);
+
+  lerTela();
+
+  if (iniciado = 1)  {
+    alterarTemp();
+  }
     
+     
+  //manter a temperatuxa por x segundos  
   } else {
-          
+    if ((tempo * 60) < minutos) {
+      tempo--;
+      atraso(1);
   }
 
   // Apresenta a temperatura atual na tela
-  Serial.print(" C  ");
-  Serial.print(Celcius);
+  Serial.print(tempAtual);
+  Serial.print(tempo)
+  
+  atraso(1);
+
+  
+}
 
 
 
-  delay(1000); 
+void serialEvent () {
+  
+}
+
+void alterarTemp() {
+  sensors.requestTemperatures();
+  tempAtual=sensors.getTempCByIndex(0);
+  if (tempAtual < tempAlvo) {
+      //verifica o angulo de abertura
+      if (anguloAtual < 180) {
+        anguloAtual = anguloAtual + 10;
+        servo.write(anguloAtual);
+    } else if (tempAtual > tempAlvo) {
+        if (anguloAtual > 0) {
+          anguloAtual anguloAtual - 10;
+          servo.write(anguloAtual);
+          }
+      }
+  }
+}
+
+//delay em segundos
+void atraso(int segundos) {
+  segundos = segundos * 1000;
+  delay(segundos);
+}
+
+//Ler botão iniciar, pegar temperatura e tempo
+void iniciar() {
+  iniciado = 1;
+  TempAlvo =
+  minutos = 
+  
+  //tempo em segundos
+  tempo = minutos * 60;  
+}
+
+void lerTela() {
+  //TODO
+  //Ler botão iniciar, pegar temperatura e tempo
 }
