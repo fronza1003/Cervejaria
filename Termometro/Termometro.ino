@@ -11,6 +11,9 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Passar a referência oneWire para Dallas Temperature (°C e °F)
 DallasTemperature sensors(&oneWire);
 
+float Celcius = 0;
+float Fahrenheit = 0;
+
 void setup(void) 
 {
   // Iniciar porta serial 
