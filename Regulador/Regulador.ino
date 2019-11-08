@@ -17,13 +17,12 @@ Servo servo;
 float tempAtual = 0;
 float tempAlvo = 0;
 float tempAnterior = 0;
-float tempProjetada = 0;
 int anguloAtual = 0;
-int minutos = 0;
-int TempAlvo = 0;
-int tempo = 0;
+int segundosAlvo = 0;
+int segundosAtual = 0;
 
 boolean iniciado = 0;
+boolean startTimer = 0;
 
 void setup(void) {
   servo.attach(8);
@@ -45,68 +44,84 @@ void alterarTemp() {
       if (anguloAtual < 180) {
         anguloAtual = anguloAtual + 10;
         servo.write(anguloAtual);
-    } else if (tempAtual > tempAlvo) {
-        if (anguloAtual > 0) {
-          anguloAtual = anguloAtual - 10;
-          servo.write(anguloAtual);
-          }
+      }
+  } if (tempAtual > tempAlvo) {
+      startTimer = 1;
+      if (anguloAtual > 10) {
+        anguloAtual = anguloAtual - 10;
+        servo.write(anguloAtual);
+      }
+    }
+}
+
+//Verifica se o temperatur atingiu o esperado e começa a decrementar o timer
+void timer() {
+  if (startTimer == 1) {
+    segundosAtual--;
+      if (segundosAtual == 0) {
+        iniciado = 0;
       }
   }
 }
 
-//delay em segundos
-void atraso(int segundos) {
-  segundos = segundos * 1000;
-  delay(segundos);
+//Apresenta os valores na tela
+void apresenta() {
+  Serial.print("Temperatura: ");
+  Serial.print(tempAtual);
+  Serial.print('\n');
+
+  Serial.print("Tempo: ");
+  Serial.print(segundosAtual);
+  Serial.print('\n');
+
+  Serial.print("Angulo: ");
+  Serial.print(anguloAtual);
+  Serial.print('\n');
+}
+
+//Enviar para a tela mensagem de término do programa
+void acabou() {
+  Serial.print("Etapa Concluída!");
+  Serial.print('\n');
+}
+
+//TODO
+//Leitura constante da tela no aguardo de novos valores
+void lerTela() {
+  
 }
 
 //Ler botão iniciar, pegar temperatura e tempo
-//TempAlvo e minutos devem ser iguais aos valores da tela, estão com valores arbitrários
+//tempAlvo e minutos devem ser iguais aos valores da tela, estão com valores arbitrários
 void iniciar() {
   iniciado = 1;
-  TempAlvo = 20;
-  minutos = 5;
+  //TODO
+  //Ler botão iniciar, pegar temperatura e tempo
+  
+  tempAlvo = 30;
+  segundosAlvo = 1;
   
   //tempo em segundos
-  tempo = minutos * 60;  
+  segundosAlvo = segundosAlvo * 60;
+  segundosAtual = segundosAlvo;
 }
-
-void lerTela() {
-  //TODO
-  //Ler botão iniciar, pegar temperatura e tempo
-}
-
-  
-
 
 void loop(void) {
-  sensors.requestTemperatures();   
-  tempAtual=sensors.getTempCByIndex(0);
-  tempProjetada = tempAlvo - 10;
-
-  
-  //TODO
-  //Ler botão iniciar, pegar temperatura e tempo
-  
-
   sensors.requestTemperatures();
   tempAtual=sensors.getTempCByIndex(0);
 
-  lerTela();
-
-  if (iniciado = 1)  {
+  if (iniciado == 1)  {
     alterarTemp();
-  }
-     
-  //manter a temperatuxa por x segundos  
-  if ((tempo * 60) < minutos) {
-    tempo--;
-    atraso(1);
+    timer();
+    apresenta();
   }
 
-  // Apresenta a temperatura atual na tela
-  Serial.print(tempAtual);
-  Serial.print(tempo);
-  
-  atraso(1);  
+  if (iniciado == 0) {
+    acabou();
+  }
+
+  //Delay de 1 segundo
+  delay(500);
+
+  lerTela();
 }
