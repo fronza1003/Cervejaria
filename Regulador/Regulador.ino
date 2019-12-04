@@ -21,13 +21,17 @@ int anguloAtual = 0;
 int segundosAlvo = 0;
 int segundosAtual = 0;
 
+String inputString = "";
+boolean stringComplete = false; 
+
 boolean iniciado = 0;
 boolean startTimer = 0;
 
 void setup(void) {
   servo.attach(8);
   servo.write(anguloAtual);  
-  Serial.begin(9600); 
+  Serial.begin(9600);
+  inputString.reserve(200); 
   sensors.begin();
   iniciar();
 }
@@ -66,29 +70,86 @@ void timer() {
 
 //Apresenta os valores na tela
 void apresenta() {
-  Serial.print("Temperatura: ");
+  Serial.print("{ \"temperatura\": ");
   Serial.print(tempAtual);
-  Serial.print('\n');
+  Serial.print(" , ");
 
-  Serial.print("Tempo: ");
+  Serial.print("\"tempo\": ");
   Serial.print(segundosAtual);
-  Serial.print('\n');
+  Serial.print(" , ");
 
-  Serial.print("Angulo: ");
+  Serial.print("\"angulo\": ");
   Serial.print(anguloAtual);
+  Serial.print(" }");
   Serial.print('\n');
 }
 
 //Enviar para a tela mensagem de término do programa
 void acabou() {
-  Serial.print("Etapa Concluída!");
+  Serial.print("{\"message\" : 'Etapa Concluída!'}");
   Serial.print('\n');
 }
+
+ String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length()-1;
+
+  for(int i=0; i<=maxIndex && found<=index; i++){
+    if(data.charAt(i)==separator || i==maxIndex){
+        found++;
+        strIndex[0] = strIndex[1]+1;
+        strIndex[1] = (i == maxIndex) ? i+1 : i;
+    }
+  }
+
+  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
+
 
 //TODO
 //Leitura constante da tela no aguardo de novos valores
 void lerTela() {
+  while (Serial.available()) {
+    // get the new byte:
+    char inChar = (char)Serial.read();
+    // add it to the inputString:
+    inputString += inChar;
+    // if the incoming character is a newline, set a flag
+    // so the main loop can do something about it:
+    if (inChar == 'c') {
+      iniciado = 0;
+    }
+    if (inChar == '/') {
+      stringComplete = true;
+    }
+  }
+  Serial.print(inputString);
   
+  if (stringComplete) {
+    Serial.print(inputString);
+    Serial.print("--");
+    Serial.print(inputString.charAt(0));
+    Serial.print("--");
+    if (inputString != "") {
+      if (inputString.charAt(0) == 'i') {
+        iniciado = 1;
+        tempAlvo = getValue(inputString, '-', 1).toInt();
+        segundosAlvo = getValue(inputString, '-', 2).toInt();
+        segundosAlvo = segundosAlvo * 60;
+        segundosAtual = segundosAlvo;
+        Serial.print("iniciado--");
+        Serial.print(getValue(inputString, '-', 1).toInt());
+        Serial.print("--");
+        Serial.print(getValue(inputString, '-', 2).toInt());
+        Serial.print("--");
+      }
+    }
+    inputString = "";
+    stringComplete = false;
+  }
 }
 
 //Ler botão iniciar, pegar temperatura e tempo

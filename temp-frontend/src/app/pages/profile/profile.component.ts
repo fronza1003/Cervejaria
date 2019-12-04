@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   templateUrl: 'profile.component.html',
@@ -6,22 +7,38 @@ import { Component } from '@angular/core';
 })
 
 export class ProfileComponent {
-  employee: any;
+  info: any;
   colCountByScreen: Object;
 
-  constructor() {
-    this.employee = {
-      ID: 7,
-      FirstName: 'Sandra',
-      LastName: 'Johnson',
-      Prefix: 'Mrs.',
-      Position: 'Controller',
-      Picture: 'images/employees/06.png',
-      BirthDate: new Date('1974/11/15'),
-      HireDate: new Date('2005/05/11'),
-      /* tslint:disable-next-line:max-line-length */
-      Notes: 'Sandra is a CPA and has been our controller since 2008. She loves to interact with staff so if you`ve not met her, be certain to say hi.\r\n\r\nSandra has 2 daughters both of whom are accomplished gymnasts.',
-      Address: '4600 N Virginia Rd.'
+  constructor(private http: HttpClient) {
+    this.info = {};
+    this.info.temperatura = 0;
+    this.info.tempo = 0;
+    var getInfo = () => {
+      this.http.get("http://localhost:3000/operation/getInfo", { responseType: 'json' })
+       .subscribe((data: any) => {
+         this.info = { ...data };
+         console.log(data.error.text);
+       },
+       (error: any) => {
+         console.log(JSON.parse(error.error.text));
+         this.info = JSON.parse(error.error.text);
+       });
     };
+    getInfo();
+    setInterval(getInfo, 3000);
+
+  }
+
+  cancel() {
+    console.log("cancel");
+    var cancelOp = () => {
+      this.http.post("http://localhost:3000/operation/cancel" , {})
+      .subscribe((data: any) => {
+        console.log(data);
+      });
+      this.info.tempo = "cancelado";
+    };
+    cancelOp();
   }
 }

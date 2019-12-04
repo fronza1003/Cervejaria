@@ -1,8 +1,8 @@
 <h2 class="content-block">Controle</h2>
 
 <div class="content-box-all">
-  <h4 class="content-box">Temperatura: <div class="sensor-info">0º C</div></h4>
-  <h4 class="content-box">Tempo: <div class="sensor-info">00:00:00</div></h4>
+  <h4 class="content-box">Temperatura: <div class="sensor-info">{{info?.temperatura}}º C</div></h4>
+  <h4 class="content-box">Tempo: <div class="sensor-info">{{info?.tempo}}</div></h4>
 </div>
 
 <div class="input-content">
@@ -10,5 +10,5 @@
   <input type="text" name="bname" placeholder="Tempo...">
   <button>Iniciar</button>
 
-  <button>Cancelar</button>
+  <button (click)="cancel()">Cancelar</button>
 </div>
